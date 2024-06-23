@@ -3,8 +3,15 @@ import Suggestions from "@/components/home/suggestions";
 import { fetchProduct, searchProducts } from "@/lib/data";
 import { Product } from "@/lib/definitions";
 import { Suspense } from "react";
+import Loading from "./loading";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+type HomeParams = {
+  page: number | undefined,
+  query: string | undefined,
+}
+
+export default function Home({ searchParams }: { searchParams: HomeParams }) {
 
   const exampleTerms = [
     'computadoras',
@@ -14,16 +21,24 @@ export default function Home() {
     'comida',
   ]
 
+  const randint = Math.floor(Math.random() * exampleTerms.length)
+
+  if (!searchParams.query) {
+    redirect(`/?page=1&query=${exampleTerms[randint]}`)
+  }
+
   return (
     <div className="min-w-full flex flex-col items-center
       space-y-3">
       <Suggestions
         examples={exampleTerms}
+        query={searchParams.query}
       />
 
       <div>
-        <ResultsSection />
-
+        <Suspense key={JSON.stringify(searchParams)} fallback={<Loading />}>
+          <ResultsSection page={searchParams.page} query={searchParams.query} />
+        </Suspense>
         <section>pagination</section>
       </div>
 

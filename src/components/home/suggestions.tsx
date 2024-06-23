@@ -5,14 +5,11 @@ import { useSearchParams } from "next/navigation"
 import clsx from "clsx"
 
 type SuggestionsPropTypes = {
-  examples: string[]
+  examples: string[],
+  query?: string
 }
 
-export default function Suggestions({ examples }: SuggestionsPropTypes) {
-  const searchParams = useSearchParams()
-  const params = new URLSearchParams(searchParams)
-  const currentSearch = params.get('query')
-
+export default function Suggestions({ examples, query }: SuggestionsPropTypes) {
   const handleSearch = useHandleSearch()
 
   const handleButton = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -41,7 +38,7 @@ export default function Suggestions({ examples }: SuggestionsPropTypes) {
               hover:before:left-0 hover:before:w-full duration-500
               border border-[#3483fa] hover:text-white
               rounded-md min-w-32`, 
-              (currentSearch === e) 
+              (query === e) 
                 ? `bg-[#3483fa] text-white cursor-not-allowed`
                 : `bg-transparent`
               )

@@ -1,6 +1,6 @@
 import { Product } from "./definitions"
 
-export async function searchProducts(query: string) {
+export async function searchProducts(query?: string) {
 
   const res = await fetch(`https://api.mercadolibre.com/sites/MLA/search?q=${query}`)
   if (!res.ok) {
