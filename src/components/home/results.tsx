@@ -1,24 +1,28 @@
-import { searchProducts } from "@/lib/data"
 import ProductResultCard from "../product-cards/product-result-card"
 import { Product } from "@/lib/definitions"
 import { use } from 'react'
-import { Suspense } from "react"
-type ResultsProps = {
-  string: string,
-  prod: Promise<Product[]>
+import Pagination from "./pagination"
+
+type ResultsPropTypes = {
+  prod: Promise<{
+    products: Product[],
+    totalResults: number,
+  }>,
+  page?: string
 }
 
-export default function Results({ string, prod }: ResultsProps) {
-  const products = use(prod)
+export default function Results({ prod, page }: ResultsPropTypes) {
+  const { products, totalResults } = use(prod)
 
   return (
-      <div>
-        {products.map((prod, id) => {
-          return (
-            <ProductResultCard key={`${prod.title}-${id}`} product={prod} />
-          )
-        })}
-      </div>
+    <>
+      {products.map((prod, id) => {
+        return (
+          <ProductResultCard key={`${prod.title}-${id}`} product={prod} />
+        )
+      })}
+      {page && <Pagination currentPage={page} totalResults={totalResults} />}
+    </>
 
   )
 }

@@ -1,7 +1,6 @@
 'use client'
 
-import { useHandleSearch } from "@/lib/utils"
-import { useSearchParams } from "next/navigation"
+import { useHandleSearch } from "@/lib/hooks"
 import clsx from "clsx"
 
 type SuggestionsPropTypes = {
@@ -27,7 +26,7 @@ export default function Suggestions({ examples, query }: SuggestionsPropTypes) {
           Acá tenes unas sugerencias
         </h2>
       </div>
-      <div className="w-full flex flex-row flex-wrap justify-center justify-items-stretch">
+      <div className="w-full flex flex-row flex-wrap justify-center">
         {examples.map((e) => {
           return (
             <button

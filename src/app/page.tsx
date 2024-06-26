@@ -5,14 +5,20 @@ import { Product } from "@/lib/definitions";
 import { Suspense } from "react";
 import Loading from "./loading";
 import { redirect } from "next/navigation";
+import Pagination from "@/components/home/pagination";
 
 type HomeParams = {
-  page: number | undefined,
+  page: string | undefined,
   query: string | undefined,
 }
 
-export default function Home({ searchParams }: { searchParams: HomeParams }) {
+export default function Home({
+  searchParams
+}: {
+  searchParams: HomeParams
+}) {
 
+  const { page, query } = searchParams
   const exampleTerms = [
     'computadoras',
     'autos',
@@ -23,7 +29,7 @@ export default function Home({ searchParams }: { searchParams: HomeParams }) {
 
   const randint = Math.floor(Math.random() * exampleTerms.length)
 
-  if (!searchParams.query) {
+  if (!query) {
     redirect(`/?page=1&query=${exampleTerms[randint]}`)
   }
 
@@ -32,14 +38,13 @@ export default function Home({ searchParams }: { searchParams: HomeParams }) {
       space-y-3">
       <Suggestions
         examples={exampleTerms}
-        query={searchParams.query}
+        query={query}
       />
 
       <div>
         <Suspense key={JSON.stringify(searchParams)} fallback={<Loading />}>
-          <ResultsSection page={searchParams.page} query={searchParams.query} />
+          <ResultsSection page={page} query={query} />
         </Suspense>
-        <section>pagination</section>
       </div>
 
     </div>

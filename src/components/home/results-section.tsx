@@ -1,37 +1,22 @@
-import { Suspense } from 'react'
 import Results from "./results";
-import { useSearchParams } from "next/navigation";
-import Loading from "@/app/loading";
-import { useHandleSearch } from '@/lib/utils';
 import { searchProducts } from '@/lib/data';
+import Pagination from "./pagination";
 
-type ResultsSectionProps = {
-  page?: number,
+type ResultsSectionPropTypes = {
+  page?: string,
   query?: string,
 }
 
-export default function ResultsSection({ page, query }: ResultsSectionProps) {
+export default function ResultsSection({ page, query }: ResultsSectionPropTypes) {
+  const prod = searchProducts(
+    query,
+    (page) ? parseInt(page) : 0
+  ) 
 
-  // const handleSearch = useHandleSearch()
-  // const exampleTerms = [
-  //   'computadoras',
-  //   'autos',
-  //   'remeras',
-  //   'electrodomésticos',
-  //   'comida',
-  // ]
-  // const term = exampleTerms[Math.floor(Math.random() * exampleTerms.length)]
-
-  // const searchParams = useSearchParams()
-  // const params = new URLSearchParams(searchParams)
-  // const q = params.get('query')
-  // const search = (q)
-  //   ? q
-  //   : handleSearch(term)
-
-
-  const prod = searchProducts(query)
+  // promise needs to be defined here for suspense to work
   return (
-    <Results string={``} prod={prod} />
+    <>
+      <Results prod={prod} page={page} />
+    </>
   )
 }
