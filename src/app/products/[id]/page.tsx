@@ -1,19 +1,22 @@
+import Loading from "@/app/loading";
+import ProductView from "@/components/products/product-view";
+import ProductViewSection from "@/components/products/product-view-section";
+import { fetchProduct } from "@/lib/data";
+import { Suspense } from "react";
 
 type ProductParams = {
-  id: string;
+  params: { id: string }
 }
 
-export default function Page({
-  params
-}: {
-  params: ProductParams
-}) {
+export default function Page({ params }: ProductParams) {
 
   const { id } = params
 
   return (
-    <div>
-      <p>rer {id}</p>
-    </div>
+    <>
+      <Suspense key={JSON.stringify(params)} fallback={<Loading />}>
+        <ProductViewSection productId={id} />
+      </Suspense>
+    </>
   )
 }

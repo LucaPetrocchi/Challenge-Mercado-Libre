@@ -7,10 +7,12 @@ export type Product = {
 }
 
 export type ProductDetail = Product & {
-  pictures: Picture[]
+  pictures: Picture[],
+  initial_quantity: number,
+  description: string,
 }
 
-type Picture = {
+export type Picture = {
   url: string,
   size: string,
   max_size: string,

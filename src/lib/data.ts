@@ -1,4 +1,5 @@
-import { Product } from "./definitions"
+import { Product, ProductDetail } from "./definitions"
+import { addPunctuationToPrice } from "./utils"
 
 export async function searchProducts(query?: string, page?: number) {
   let limit = 20
@@ -6,7 +7,6 @@ export async function searchProducts(query?: string, page?: number) {
   if (page && page > 1) {
     fetchString += `&offset=${page * limit}`
   }
-  console.log(fetchString)
   const res = await fetch(fetchString)
   if (!res.ok) {
     throw new Error('fallo de fetch de producto')
@@ -19,16 +19,47 @@ export async function searchProducts(query?: string, page?: number) {
 
 }
 
+async function fetchProductDescription(id: string) {
+  const fetchString = `https://api.mercadolibre.com/items/${id}/description`
+  const res = await fetch(fetchString)
+  if (!res.ok) {
+    throw new Error('Fallo de fetch de descripción de producto')
+  }
+  const json = await res.json()
+  return json['plain_text'] as string
+}
+
 export async function fetchProduct(id: string) {
-  try {
-    const res = await fetch(`https://api.mercadolibre.com/items/${id}`)
+    const fetchString = `https://api.mercadolibre.com/items/${id}`
+    const res = await fetch(fetchString)
     if (!res.ok) {
       throw new Error('fallo de fetch de producto')
     }
-    return res.json()
-  } catch (error) {
-    console.error('Error al buscar datos del producto')
+    const json: ProductDetail = await res.json()
+    json.description = await fetchProductDescription(id)
+    return {
+      product: json
+    }
+}
+
+async function getDollarBlue() {
+  const res = await fetch(`https://dolarapi.com/v1/dolares/blue`)
+  if (!res.ok) {
+    throw new Error('fallo de fetch de valor dólares')
   }
+
+  const json = await res.json()
+
+  return {
+    dollarBlue: json['compra'] as number
+  }
+}
+
+export async function dollarBlueToPesos(productPrice: number) {
+  const { dollarBlue } = await getDollarBlue()
+  
+  return addPunctuationToPrice(`${productPrice * dollarBlue}`)
+  
 }
 
 async function saveCart(items: string[]) {

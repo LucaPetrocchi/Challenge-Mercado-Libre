@@ -4,9 +4,8 @@ import { useDebouncedCallback } from "use-debounce";
 
 export const useHandleSearch = () => {
   const searchParams = useSearchParams()
-  const pathname = usePathname()
   const params = new URLSearchParams(searchParams)
-  const { replace } = useRouter()
+  const { push } = useRouter()
   const handleSearch = useDebouncedCallback((term?: string) => {
     params.set('page', '1')
     if (term) {
@@ -14,7 +13,7 @@ export const useHandleSearch = () => {
     } else {
       params.delete('query')
     }
-    replace(`${pathname}?${params.toString()}`)
+    push(`/?${params.toString()}`)
 
   }, 500)
 
