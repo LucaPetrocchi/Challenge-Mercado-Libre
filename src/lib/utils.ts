@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react"
+
 export const addPunctuationToPrice = (price: string) => {
 
   const reverseString = (str: string) => {
@@ -15,4 +17,21 @@ export const addPunctuationToPrice = (price: string) => {
   } else {
     return price
   }
+}
+
+export const productCountUp = (
+  stateVal: number, 
+  stateSetter: Dispatch<SetStateAction<number>>, 
+  max: number,
+) => {
+  if (stateVal === max) return;
+  stateSetter((prev: number) => prev + 1)
+}
+
+export const productCountDown = (
+  stateVal: number,
+  stateSetter: Dispatch<SetStateAction<number>>
+) => {
+  if (stateVal === 1) return
+  stateSetter((prev: number) => prev - 1)
 }

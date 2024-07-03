@@ -18,3 +18,9 @@ export type Picture = {
   max_size: string,
 }
 
+export type CartProduct = {
+  id: string,
+  amount: number
+}
+
+export type CartProductDetail = Omit<ProductDetail, 'pictures'> & CartProduct

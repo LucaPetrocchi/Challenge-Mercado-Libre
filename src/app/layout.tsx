@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import Navbar from "@/components/navbar/nav-bar";
+import { Toaster } from "react-hot-toast";
+import { memo } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,15 +21,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body 
-      className={`${inter.className}`}
+      <body
+        className={`${inter.className}`}
       >
-        <Navbar />
-        <main className="flex min-h-screen 
+          <Navbar />
+          <main className="flex min-h-screen 
           flex-col items-center justify-between 
           p-12 bg-[#ebebeb]">
-          {children}
-        </main>
+            <Toaster position="bottom-center" />
+            {children}
+          </main>
       </body>
     </html>
   );

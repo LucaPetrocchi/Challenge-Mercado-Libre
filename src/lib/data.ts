@@ -1,4 +1,4 @@
-import { Product, ProductDetail } from "./definitions"
+import { CartProduct, Product, ProductDetail } from "./definitions"
 import { addPunctuationToPrice } from "./utils"
 
 export async function searchProducts(query?: string, page?: number) {
@@ -30,19 +30,19 @@ async function fetchProductDescription(id: string) {
 }
 
 export async function fetchProduct(id: string) {
-    const fetchString = `https://api.mercadolibre.com/items/${id}`
-    const res = await fetch(fetchString)
-    if (!res.ok) {
-      throw new Error('fallo de fetch de producto')
-    }
-    const json: ProductDetail = await res.json()
-    json.description = await fetchProductDescription(id)
-    return {
-      product: json
-    }
+  const fetchString = `https://api.mercadolibre.com/items/${id}`
+  const res = await fetch(fetchString)
+  if (!res.ok) {
+    throw new Error('fallo de fetch de producto')
+  }
+  const json: ProductDetail = await res.json()
+  json.description = await fetchProductDescription(id)
+  return {
+    product: json
+  }
 }
 
-async function getDollarBlue() {
+export async function getDollarBlue() {
   const res = await fetch(`https://dolarapi.com/v1/dolares/blue`)
   if (!res.ok) {
     throw new Error('fallo de fetch de valor dólares')
@@ -50,42 +50,48 @@ async function getDollarBlue() {
 
   const json = await res.json()
 
-  return {
-    dollarBlue: json['compra'] as number
-  }
+  return json['compra'] as number
 }
 
 export async function dollarBlueToPesos(productPrice: number) {
-  const { dollarBlue } = await getDollarBlue()
-  
+  const dollarBlue = await getDollarBlue()
+
   return addPunctuationToPrice(`${productPrice * dollarBlue}`)
-  
+
 }
 
-async function saveCart(items: string[]) {
+async function saveCart(items: CartProduct[]) {
   localStorage.setItem('cart', JSON.stringify(items))
 }
 
 export async function getCart() {
-  try {
-    let c = localStorage.getItem('cart')
-    if (c) {
-      let cart: string[] = JSON.parse(c)
-      return cart
-    } else {
-      throw new Error('No hay carrito guardado')
+    let c = localStorage.getItem('cart')    
+    if (!c) return undefined
+    
+    let cart: CartProduct[] = JSON.parse(c)
+    return cart
+
+
+}
+
+export async function searchCart(item: string) {
+  let cart = await getCart()
+  if (cart) {
+    let product = cart.find(p => p.id === item)
+    if (product) {
+      return product
     }
-  } catch (error) {
-    console.error(error)
   }
 }
 
-export async function addToCart(item: string) {
+export async function addToCart(item: string, amount: number) {
+  let p: CartProduct = { id: item, amount: amount }
   let cart = await getCart()
+  console.log(cart)
   if (cart) {
-    cart.unshift(item)
+    cart.unshift(p)
   } else {
-    cart = [item]
+    cart = [p]
   }
 
   saveCart(cart)
@@ -95,7 +101,7 @@ export async function removeFromCart(item: string) {
   try {
     let cart = await getCart()
     if (cart) {
-      let index = cart.indexOf(item)
+      let index = cart.findIndex(p => p.id === item)
       if (index >= 0) {
         cart.splice(index, 1)
         saveCart(cart)

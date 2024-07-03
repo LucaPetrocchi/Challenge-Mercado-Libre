@@ -15,9 +15,8 @@ export default function ProductResultCard({ product }: ProductResultCardPropType
 
   return (
     <Link 
-      className="flex flex-row border-2
-      m-2 p-2 rounded-md bg-white 
-      border-[#a8a8a8]"
+      className="flex flex-row border-2 border-b bg-white
+       p-2 "
       href={`/products/${id}`}
     >
       <div className="flex justify-center items-center min-w-28">
@@ -31,7 +30,7 @@ export default function ProductResultCard({ product }: ProductResultCardPropType
 
       <div className="flex flex-col justify-between w-full ml-2 px-2 py-3 border-l border-[#a8a8a8]">
         <p className="text-lg line-clamp-1">{title}</p>
-        <p className="text-2xl">{`${currency_id} $${modifiedPrice}`}</p>
+        <p className="text-2xl font-[60px]">{`${currency_id} $${modifiedPrice}`}</p>
       </div>
 
     </Link>

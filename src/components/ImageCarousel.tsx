@@ -32,12 +32,11 @@ export default function ImageCarousel({ images }: ImageCarouselPropTypes) {
 
   return (
     <div
-      className="flex flex-col md:min-w-[40rem] md:min-h-[35rem] min-w-[28rem] 
-      min-h-[40rem]"
+      className="flex flex-col grow"
     >
       <div
         className={`relative flex flex-row align-middle justify-between 
-         overflow-hidden w-full h-full grow
+         overflow-hidden w-full min-h-[60vh]
         border border-gray-400 rounded-3xl`}
       >
         {(moreThanOneImg) && (
@@ -89,9 +88,9 @@ export default function ImageCarousel({ images }: ImageCarouselPropTypes) {
           {images.map((img, i) => {
             return (
               <button
+                key={`carouselImageButton${i}`}
                 className="z-20 m-1 h-12 w-12 align-middle justify-center
-          text-sm border bg-gray-400 border-gray-900 
-          "
+          text-sm border bg-gray-400 border-gray-900"
                 style={{
                   backgroundImage: `url('${img.url}')`,
                   backgroundSize: 'cover',
